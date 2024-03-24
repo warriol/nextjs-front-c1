@@ -22,10 +22,11 @@ function Home() {
     });
   }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-    const res = await fetch('http://localhost:8080/register', {
+    /*
+    fetch('http://localhost:8080/register', {
       method: 'POST',
       headers: {
       'Content-Type': 'application/json'
@@ -33,16 +34,34 @@ function Home() {
       mode: 'cors',
       body: JSON.stringify(credentials)
     });
-
-    console.log(res);
-    /*
-    if (res.status === 200) {
-      console.log("Usuario registrado");
-      router.push("/");
-    }else{
-      console.log("Error al registrar usuario");
-    }
     */
+
+    fetch('http://localhost:8080/register', {
+      method: 'POST',
+      headers: {
+      'Content-Type': 'application/json'
+      },
+      mode: 'cors',
+      body: JSON.stringify(credentials)
+    })
+    .then(res => {
+      if (res.status !== 200) {
+        throw new Error('Error en la conexión.');
+      }
+      return res.json();
+    })
+    .then(data => {
+      console.log("Res:", data);
+      // Aquí puedes acceder a los campos del objeto JSON, por ejemplo:
+      console.log("Token:", data.token);
+      console.log("Message:", data.message);
+      router.push("/");
+    })
+    .catch(error => {
+      console.error('There was a problem with the fetch operation:', error);
+    });
+
+        
   };
 
   return (
